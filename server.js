@@ -26,6 +26,28 @@ function handler(req, res) {
 	});
 }
 
+var mySocket;
+
+var serialport = require("serialport");
+var SerialPort = serialport.SerialPort;
+
+var mySerial = new SerialPort("/dev/ttyACM0", {
+  baudrate: 9600,
+  parser: serialport.parsers.readline("\n")
+});
+
+mySerial.on("open", function() {
+  console.log("port");
+});
+
+mySerial.on("data", function(datos) {
+  //console.log(datos);
+  io.emit("datoArduino", {
+    valor: data
+  });
+});
+
+
 //Cuando abramos el navegador estableceremos una conexión con socket.io.
 //Cada X segundos mandaremos a la gráfica un nuevo valor.
 io.sockets.on('connection', function(socket) {
