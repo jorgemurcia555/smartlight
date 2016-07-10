@@ -28,6 +28,85 @@
 </head>
 <body>
 <!-- Main jumbotron for a primary marketing message or call to action -->
+<header>
+      <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">SmartLight</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="#">General</a>
+                        </li>
+                        <li>
+                            <a href="#">Consumo detallado</a>
+                        </li>
+                        <li>
+                            <a href="#contact">Historial</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </nav>
+        <div class="container">
+
+          <canvas id="myChart" width="400" height="400"></canvas>
+          <script>
+          var contador = 0;
+          var ctx = document.getElementById("myChart");
+          var data = {
+              labels: [""],
+              datasets: [
+                  {
+                      label: "Consumo",
+                      fill: false,
+                      lineTension: 0.1,
+                      backgroundColor: "rgba(75,192,192,0.4)",
+                      borderColor: "rgba(75,192,192,1)",
+                      borderCapStyle: 'butt',
+                      borderDash: [],
+                      borderDashOffset: 0.0,
+                      borderJoinStyle: 'miter',
+                      pointBorderColor: "rgba(75,192,192,1)",
+                      pointBackgroundColor: "#fff",
+                      pointBorderWidth: 1,
+                      pointHoverRadius: 5,
+                      pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                      pointHoverBorderColor: "rgba(220,220,220,1)",
+                      pointHoverBorderWidth: 2,
+                      pointRadius: 1,
+                      pointHitRadius: 10,
+                      data: [],
+                  }
+              ]
+          };
+          var myLineChart = new Chart(ctx, {
+              type: 'line',
+              data: data,
+              options: options
+          });
+          </script>
+          <script type="text/javascript">
+            var socket = io();
+            socket.on("datoArduino", function(dato) {
+              console.log(dato);
+              myLineChart.addData([dato.valor], contador++);
+            })
+          </script>
+        </div>
+    </header>
+
     <div class="container">
 
   <div class="row marketing">
@@ -66,7 +145,7 @@
             selected : 100
         },
         title: {
-            text: 'CPU Temperature Raspberry Pi'
+            text: 'Watts'
         },
         xAxis: {
             type: 'Hora',
@@ -82,7 +161,7 @@
             }
         },
         series: [{
-            name: 'Temperature',
+            name: 'Watts',
             data: []
         }],
         credits: {
@@ -124,7 +203,7 @@
             }
         },
         series: [{
-            name: 'CPU Load',
+            name: 'Usado',
             data: []
         }],
         credits: {
@@ -146,7 +225,7 @@
                   }
             },
             title: {
-                text: 'Memory'
+                text: 'Cosumo'
             },
             xAxis: {
                 categories: ['Used', 'Free', 'Buffered', 'Cached'],
@@ -178,7 +257,7 @@
                 enabled: false
             },
             series: [{
-                name: "Memory",
+                name: "Consumo",
                 data: [{y: 0, color: 'red'}, {y: 0, color: 'green'}, {y: 0, color: 'blue'}, {y: 0, color: 'orange'}]
             }]
         });
@@ -202,9 +281,11 @@
             document.getElementById("toplist").innerHTML=result;
         });
         socket.on('memoryTotal', function (mem) {
-          chartMem.setTitle({text:"Memory: "+mem+" KB"});
+          chartMem.setTitle({text:": "+mem+" #"});
           memTotal = mem;
         });
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.js"></script>
 </body>
 </html>

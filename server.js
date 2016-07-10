@@ -14,7 +14,7 @@ var app = require('http').createServer(handler).listen(port, "0.0.0.0"),
 app.listen(port);
 //Si todo va bien al abrir el navegador, cargaremos el archivo index.html
 function handler(req, res) {
-	fs.readFile(__dirname+'/public/index.html', function(err, data) {
+	fs.readFile(__dirname+'/index.html', function(err, data) {
 		if (err) {
       //Si hay error, mandaremos un mensaje de error 500
 			console.log(err);
